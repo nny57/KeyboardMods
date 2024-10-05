@@ -1,0 +1,32 @@
+#NoEnv
+#SingleInstance, Force
+SetWorkingDir, %A_ScriptDir%
+#Persistent
+
+; Define the home row mod keys and their corresponding modifiers
+homeRowMods := {a: "LCtrl", s: "LAlt", d: "LWin", f: "LShift"
+                , j: "RShift", k: "RWin", l: "RAlt", SC027: "RCtrl"}
+
+; Function to handle mod-tap behavior
+ModTap(key, mod) {
+    KeyWait, %key%, T0.2
+    if (ErrorLevel) {
+        Send {%mod% Down}
+        KeyWait, %key%
+        Send {%mod% Up}
+    } else {
+        Send %key%
+    }
+    return
+}
+
+; Set up hotkeys for each home row mod
+for key, mod in homeRowMods {
+    Hotkey, ~*%key%, ModTapHandler
+}
+
+ModTapHandler:
+    key := SubStr(A_ThisHotkey, 3)
+    mod := homeRowMods[key]
+    ModTap(key, mod)
+return
