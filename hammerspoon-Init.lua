@@ -49,7 +49,7 @@ function moveFocusToScreen(screenNumber)
         local center = hs.geometry.rectMidPoint(rect)
         
         -- Move mouse to center of target screen
-        hs.mouse.setAbsolutePosition(center)
+        hs.mouse.absolutePosition(center)
         
         -- Get the frontmost application on the target screen
         local frontApp = nil
@@ -77,4 +77,4 @@ end
 hs.hotkey.bind(hyper, "H", switchToNextApp)
 hs.hotkey.bind(hyper, "i", function() moveFocusToScreen(1) end)
 hs.hotkey.bind(hyper, "u", function() moveFocusToScreen(2) end)
-hs.hotkey.bind(hyper, "w", function() moveFocusToScreen(3) end)
+hs.hotkey.bind(hyper, "o", function() moveFocusToScreen(3) end)
