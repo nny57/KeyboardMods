@@ -40,6 +40,28 @@ local function switchToNextApp()
     end
 end
 
+-- Function to switch to the previous app on the current display
+local function switchToPreviousApp()
+    local currentScreen = hs.mouse.getCurrentScreen()
+    local windows = getVisibleWindowsOnScreen(currentScreen)
+    local currentApp = hs.application.frontmostApplication()
+    local prevAppIndex = #windows
+
+    -- Find the index of the current app
+    for i, window in ipairs(windows) do
+        if window:application() == currentApp then
+            prevAppIndex = ((i - 2 + #windows) % #windows) + 1
+            break
+        end
+    end
+
+    -- Focus the previous app
+    if windows[prevAppIndex] then
+        windows[prevAppIndex]:focus()
+        lastFocusedApps[currentScreen:id()] = windows[prevAppIndex]:application()
+    end
+end
+
 -- Function to move focus to a specific screen and select the front application
 function moveFocusToScreen(screenNumber)
     local screens = hs.screen.allScreens()
@@ -74,7 +96,8 @@ function moveFocusToScreen(screenNumber)
 end
 
 -- Set up hotkeys
-hs.hotkey.bind(hyper, "H", switchToNextApp)
+hs.hotkey.bind(hyper, "h", switchToNextApp)
+hs.hotkey.bind(hyper, "y", switchToPreviousApp)  -- New hotkey for previous app
 hs.hotkey.bind(hyper, "i", function() moveFocusToScreen(1) end)
 hs.hotkey.bind(hyper, "u", function() moveFocusToScreen(2) end)
 hs.hotkey.bind(hyper, "o", function() moveFocusToScreen(3) end)
