@@ -1,2 +1,2 @@
 # KeyboardMods
-MyKeyboard Mods
+My Keyboard Mods
