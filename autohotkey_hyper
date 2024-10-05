@@ -1,0 +1,16 @@
+#NoEnv
+#SingleInstance, Force
+SetWorkingDir, %A_ScriptDir%
+
+; Caps Lock to Escape when tapped, Hyper when held
+CapsLock::
+    KeyWait, CapsLock, T0.2
+    If ErrorLevel
+    {
+        Send {LWin Down}{LCtrl Down}{LAlt Down}{LShift Down}
+        KeyWait, CapsLock
+        Send {LWin Up}{LCtrl Up}{LAlt Up}{LShift Up}
+    }
+    Else
+        Send {Escape}
+return
