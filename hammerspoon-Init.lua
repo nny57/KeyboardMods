@@ -101,3 +101,50 @@ hs.hotkey.bind(hyper, "y", switchToPreviousApp)  -- New hotkey for previous app
 hs.hotkey.bind(hyper, "i", function() moveFocusToScreen(1) end)
 hs.hotkey.bind(hyper, "u", function() moveFocusToScreen(2) end)
 hs.hotkey.bind(hyper, "o", function() moveFocusToScreen(3) end)
+
+
+--------------------------------------------------------------------------
+-- Remove cmd q quit and require 2 presses to quit --------------------------------------------------------------------------
+
+
+-- Variables to keep track of the quit timer and the application
+local quitTimer = nil
+local quitApp = nil
+
+-- Bind the Command+Q hotkey
+hs.hotkey.bind({"cmd"}, "q", function()
+  -- Get the currently active application
+  local currentApp = hs.application.frontmostApplication()
+  
+  -- Check if there's an existing timer and if it's for the same app
+  if quitTimer and quitApp == currentApp then
+    -- If it's the second press within the time window, quit the app
+    currentApp:kill()
+    -- Stop and clear the timer
+    quitTimer:stop()
+    quitTimer = nil
+    quitApp = nil
+    
+    -- Show an alert that the app has been quit
+   -- hs.alert.show(currentApp:name() .. " has been closed.", 1)
+  else
+    -- If there's an existing timer for a different app, stop it
+    if quitTimer then
+      quitTimer:stop()
+    end
+    
+    -- Store the current app and start a new timer
+    quitApp = currentApp
+    quitTimer = hs.timer.doAfter(0.5, function()
+      -- This function runs if the timer expires (0.5 seconds pass)
+      -- Reset the timer and app variables
+      quitTimer = nil
+      quitApp = nil
+    end)
+    
+    -- Show an alert to press again to quit
+    hs.alert.show("Press Command+Q again to quit " .. currentApp:name(), 0.5)
+  end
+end)
+
+  
